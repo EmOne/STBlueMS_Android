@@ -36,11 +36,12 @@
  */
 package com.st.blesensor.cloud.AzureIoTCentral;
 
-import androidx.annotation.Nullable;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 
 import com.github.lucadruda.iotc.device.Command;
+import com.github.lucadruda.iotc.device.ICentralStorage;
 import com.github.lucadruda.iotc.device.ILogger;
 import com.github.lucadruda.iotc.device.IoTCClient;
 import com.github.lucadruda.iotc.device.callbacks.IoTCCallback;
@@ -48,6 +49,7 @@ import com.github.lucadruda.iotc.device.enums.IOTC_CONNECT;
 import com.github.lucadruda.iotc.device.enums.IOTC_EVENTS;
 import com.github.lucadruda.iotc.device.enums.IOTC_LOGGING;
 import com.github.lucadruda.iotc.device.exceptions.IoTCentralException;
+import com.github.lucadruda.iotc.device.models.Storage;
 import com.st.blesensor.cloud.CloudIotClientConnectionFactory;
 
 import org.json.JSONException;
@@ -61,12 +63,11 @@ import java.util.concurrent.Executors;
 class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient {
     private static final String TAG = "IoTCentralClient";
 
-    private ExecutorService mBackgroundThread = Executors.newFixedThreadPool(1);
-    private IoTCClient client;
+    private final ExecutorService mBackgroundThread = Executors.newFixedThreadPool(1);
+    private final IoTCClient client;
     private boolean isConnected = false;
 
-    private IoTCCallback logCallback = new IoTCCallback() {
-        @Override
+    private final IoTCCallback logCallback = new IoTCCallback() {
         public void Exec(Object result) {
             Log.d(TAG,"Log Result: "+result);
         }
@@ -75,7 +76,17 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
             //(error, message) -> Log.d(TAG,"Error: "+error+" message: "+message);
 
     IoTCentralClient(String scopeId, String deviceId, String masterKey){
-        client = new IoTCClient(deviceId,scopeId, IOTC_CONNECT.SYMM_KEY,masterKey, new AndroidLogger());
+        client = new IoTCClient(deviceId, scopeId, IOTC_CONNECT.SYMM_KEY, masterKey, new ICentralStorage() {
+            @Override
+            public void persist(Storage storage) {
+
+            }
+
+            @Override
+            public Storage retrieve() {
+                return null;
+            }
+        });
     }
 
     void connect(CloudIotClientConnectionFactory.ConnectionListener callback){
@@ -104,7 +115,7 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
         isConnected=false;
         mBackgroundThread.submit(() -> {
             try {
-                client.Disconnect(logCallback);
+                client.Disconnect();
             } catch (IoTCentralException e) {
                 e.printStackTrace();
             }
@@ -123,7 +134,13 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
     void publish(String obj){
         Log.d(TAG,"Publish: "+obj);
         mBackgroundThread.submit(
-                () -> client.SendTelemetry(obj,null)
+                () -> {
+                    try {
+                        client.SendTelemetry(obj, null);
+                    } catch (IoTCentralException e) {
+                        e.printStackTrace();
+                    }
+                }
         );
     }
 
@@ -153,8 +170,7 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
     }
 
     void onFwUpgradeCommand(CloudIotClientConnectionFactory.FwUpgradeAvailableCallback callback){
-        client.on(IOTC_EVENTS.Command, new IoTCCallback() {
-            @Override
+        client.on(IOTC_EVENTS.Commands, new IoTCCallback() {
             public void Exec(Object result) {
                 Log.d(TAG,"Result:"+result);
                 if (!(result instanceof Command))
@@ -165,7 +181,7 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
                     callback.onFwUpgradeAvailable(newFwUrl);
                     Map<String, Object> response = prepareResponse(FW_UPGRADE_CMD, FW_UPGRADE_RESPONSE);
                     try {
-                        client.SendProperty(response, null);
+                        client.SendProperty(response);
                     } catch (IoTCentralException e) {
                         e.printStackTrace();
                     }//try-catch
@@ -174,11 +190,26 @@ class IoTCentralClient implements CloudIotClientConnectionFactory.CloutIotClient
         });
     }
 
-    class AndroidLogger implements ILogger {
+    static class AndroidLogger implements ILogger {
 
         @Override
         public void Log(String s) {
             Log.i(TAG,s);
+        }
+
+        @Override
+        public void Log(String message, String tag) {
+            Log.i(tag,message);
+        }
+
+        @Override
+        public void Debug(String message) {
+
+        }
+
+        @Override
+        public void Debug(String message, String tag) {
+
         }
 
         @Override

@@ -50,7 +50,7 @@ import kotlin.time.seconds
 
 @ExperimentalTime
 internal class PlotSettingsViewModelFactory(private val node:Node) : ViewModelProvider.Factory{
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PlotSettingsViewModel(node) as T
     }
 

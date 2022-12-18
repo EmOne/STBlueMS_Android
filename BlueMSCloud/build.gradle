@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'proguard-rules.pro'
@@ -27,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.st.blesensor.cloud'
 
 }
 
@@ -34,31 +33,32 @@ dependencies {
     implementation project(':BlueSTSDK')
     implementation project(':BlueSTSDK_Gui_Android')
 
-    implementation group: 'com.google.android.material', name: 'material', version: "$rootProject.androidx_materialVersion"
-    implementation group: 'androidx.appcompat', name: 'appcompat', version: "$rootProject.androidx_appCompatVersion"
-    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: "$rootProject.androidx_constraintLayoutVersion"
+    implementation group: 'com.google.android.material', name: 'material', version: '1.7.0'
+    implementation group: 'androidx.appcompat', name: 'appcompat', version: '1.5.1'
+    implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: '2.1.4'
 
 
     //necessary for ProviderInstaller.installIfNeeded for enable tls1.2 on android 4.4@samsung s4
-    implementation group: 'com.google.android.gms', name: 'play-services-basement', version: '17.3.0'
+    implementation group: 'com.google.android.gms', name: 'play-services-basement', version: '18.1.0'
 
     //necessary to cloud demo, for mqtt connection
-    api group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: "$rootProject.cloud_pahoVersion"
+    api group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
     api group: 'org.eclipse.paho', name: 'org.eclipse.paho.android.service', version: "$rootProject.cloud_pahoServiceVersion"
 
     //amazon aws iot
-    implementation group: 'com.amazonaws', name: 'aws-android-sdk-iot', version: "$rootProject.amazonSDKVersion"
+    implementation group: 'com.amazonaws', name: 'aws-android-sdk-iot', version: '2.59.1'
 
     //azure iot client
-    implementation 'com.github.lucadruda:iotc-java-device-client:1.0.3'
+    implementation 'com.github.lucadruda:iotc-java-device-client:2.1.2'
+    implementation 'androidx.test.ext:junit:1.1.4'
 
-    testImplementation group: 'junit', name: 'junit', version: "$rootProject.junitVersion"
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: "$rootProject.mockitoVersion"
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.10.0'
 
-    androidTestImplementation group:'androidx.test', name:'runner', version:"$rootProject.androidx_runnerVersion"
-    androidTestImplementation group:'androidx.test', name:'rules', version:"$rootProject.androidx_rulesVersion"
-    androidTestImplementation group:'androidx.test.espresso', name: 'espresso-core', version:"$rootProject.androidx_espressoVersion"
-    implementation "androidx.core:core-ktx:+"
+    androidTestImplementation group:'androidx.test', name:'runner', version: '1.5.1'
+    androidTestImplementation group:'androidx.test', name:'rules', version: '1.5.0'
+    androidTestImplementation group:'androidx.test.espresso', name: 'espresso-core', version: '3.5.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

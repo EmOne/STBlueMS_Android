@@ -51,7 +51,7 @@ internal data class AvailableAlgorithm(
 )
 
 internal class MultiNNViewModelFactory(private val node: Node) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return modelClass.getConstructor(Node::class.java).newInstance(node)
     }
 }

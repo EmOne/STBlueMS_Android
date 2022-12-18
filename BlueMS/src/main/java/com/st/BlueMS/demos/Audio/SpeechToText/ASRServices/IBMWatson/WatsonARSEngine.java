@@ -2,6 +2,7 @@ package com.st.BlueMS.demos.Audio.SpeechToText.ASRServices.IBMWatson;
 
 import android.content.Context;
 import android.os.AsyncTask;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -9,7 +10,7 @@ import com.ibm.cloud.sdk.core.http.HttpMediaType;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.watson.speech_to_text.v1.SpeechToText;
 import com.ibm.watson.speech_to_text.v1.model.GetModelOptions;
-import com.ibm.watson.speech_to_text.v1.model.RecognizeOptions;
+import com.ibm.watson.speech_to_text.v1.model.RecognizeWithWebsocketsOptions;
 import com.ibm.watson.speech_to_text.v1.model.SpeechRecognitionResult;
 import com.ibm.watson.speech_to_text.v1.model.SpeechRecognitionResults;
 import com.ibm.watson.speech_to_text.v1.websocket.BaseRecognizeCallback;
@@ -65,11 +66,11 @@ public class WatsonARSEngine implements ASREngine {
         return DEFAULT_LANGUAGE_MODEL;
     }
 
-    private Context mContext;
+    private final Context mContext;
     private boolean mIsAsrEnabled;
     private PipedInputStream mWebSocketPipe;
     private PipedOutputStream mAppPipe;
-    private @ASRLanguage.Language int mModel;
+    private final @ASRLanguage.Language int mModel;
     private WatsonServiceCallback mServiceCallback;
 
     private void initAudioStream() throws IOException {
@@ -142,9 +143,9 @@ public class WatsonARSEngine implements ASREngine {
 
     private static class WatsonConnectionTask extends AsyncTask<InputStream,Void,Void>{
 
-        private static RecognizeOptions getRecognizeOptions(InputStream inputStream, @ASRLanguage.Language int model){
-            return new RecognizeOptions.Builder()
-                    .interimResults(true)
+        private static RecognizeWithWebsocketsOptions getRecognizeOptions(InputStream inputStream, @ASRLanguage.Language int model){
+            return new RecognizeWithWebsocketsOptions.Builder()
+//                    .interimResults(true)
                     .audio(inputStream)
                     //.inactivityTimeout(2000)
                     .inactivityTimeout(-1)//inactivity timeout to +inf
@@ -153,9 +154,9 @@ public class WatsonARSEngine implements ASREngine {
                     .build();
         }
 
-        private @ASRLanguage.Language int mModel;
-        private SpeechToText mService;
-        private RecognizeCallback mServiceCallback;
+        private final @ASRLanguage.Language int mModel;
+        private final SpeechToText mService;
+        private final RecognizeCallback mServiceCallback;
 
         WatsonConnectionTask(SpeechToText service,@ASRLanguage.Language int model,RecognizeCallback serviceCallback){
             mService = service;
@@ -167,7 +168,7 @@ public class WatsonARSEngine implements ASREngine {
         protected Void doInBackground(InputStream... inputStreams) {
             InputStream inputStream = inputStreams[0];
             mService.recognizeUsingWebSocket(
-                    getRecognizeOptions(inputStream,mModel),
+                    getRecognizeOptions(inputStream, mModel),
                     mServiceCallback);
             return null;
         }
@@ -177,7 +178,7 @@ public class WatsonARSEngine implements ASREngine {
 
     private static class WatsonServiceCallback extends BaseRecognizeCallback {
 
-        private @NonNull
+        private final @NonNull
         ASRConnectionCallback mSetupCallback;
         private ASRRequestCallback mRequestCallback;
 

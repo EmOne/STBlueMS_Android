@@ -2,11 +2,11 @@
 
 
 buildscript {
-    ext.kotlin_version = '1.3.72'
-    ext.os_licenses_plugin_version='0.10.2'
+    ext.kotlin_version = '1.7.21'
+    ext.os_licenses_plugin_version= '0.10.4'
 
     repositories {
-        jcenter()
+        mavenCentral()
         google()
 
         //needed for Crashlytics
@@ -17,10 +17,10 @@ buildscript {
     }
     dependencies {
 
-        classpath 'com.android.tools.build:gradle:4.1.0'
-        classpath 'com.google.gms:google-services:4.3.3'
+        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.google.gms:google-services:4.3.14'
         // google-services plugin needed for Crashlytics
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.1.1'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.android.gms:oss-licenses-plugin:$os_licenses_plugin_version"
 
@@ -32,7 +32,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
 
         //Add for compiling BLESensor with login module shared with Asset Tracking
         maven { url 'https://jitpack.io' }
@@ -44,8 +44,8 @@ ext {
     // Sdk and tools
     minSdkVersion = 21
     targetSdkVersion = 29
-    compileSdkVersion = 29
-    buildToolsVersion = '29.0.3'
+    compileSdkVersion = 33
+    buildToolsVersion = '33.0.1'
 
     androidx_appCompatVersion = '1.1.0'
     androidx_fragmentVersion = '1.2.5'
@@ -71,7 +71,7 @@ ext {
     androidx_runnerVersion = '1.2.0'
     androidx_rulesVersion = '1.2.0'
     androidx_espressoVersion = '3.2.0'
-    mockitoVersion = '1.9.5'
+    mockitoVersion = '4.10.0'
 
 
     //Add for compiling BLESensor with login module shared with Asset Tracking
@@ -84,13 +84,13 @@ ext {
     awsVersion = '2.16.12'
 
     firebase_messagingVersion = '20.2.0'
-    junitVersion = '4.13'
+    junitVersion = '4.13.2'
     androidx_junitVersion = '1.1.1'
 
 
     //kotlin
-    kotlin_coroutineVersion = '1.3.7'
-    kotlin_coroutineAndroidVersion = '1.3.7'
+    kotlin_coroutineVersion = '1.6.4'
+    kotlin_coroutineAndroidVersion = '1.6.4'
     kotlin_coroutine = '1.3.7'
 
     javaVersion = JavaVersion.VERSION_1_8
