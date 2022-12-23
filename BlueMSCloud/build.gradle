@@ -46,7 +46,7 @@ dependencies {
     api group: 'org.eclipse.paho', name: 'org.eclipse.paho.android.service', version: "$rootProject.cloud_pahoServiceVersion"
 
     //amazon aws iot
-    implementation group: 'com.amazonaws', name: 'aws-android-sdk-iot', version: '2.59.1'
+    implementation group: 'com.amazonaws', name: 'aws-android-sdk-iot', version: '2.60.0'
 
     //azure iot client
     implementation 'com.github.lucadruda:iotc-java-device-client:2.1.2'
