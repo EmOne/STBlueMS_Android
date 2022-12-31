@@ -7,7 +7,7 @@
     </style>
 
     <style name="AppFullscreenTheme" parent="FullscreenTheme">
-        <item name="android:windowBackground">@drawable/splash_screen_image</item>
+        <item name="android:windowBackground">@drawable/sisgeo_splash_screen_image</item>
     </style>
 
     <style name="IconButton" parent="Widget.MaterialComponents.Button">
