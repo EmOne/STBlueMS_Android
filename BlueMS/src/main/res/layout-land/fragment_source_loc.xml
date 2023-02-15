@@ -89,7 +89,7 @@
                     android:text="@string/source_loc_low_sens" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/textTemperatureView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/sourceLoc_sensitivity_switch"
